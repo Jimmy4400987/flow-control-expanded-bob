@@ -14,7 +14,7 @@ local migration_table =
 }
 
 -- Look for entities to be migrated
-for _, surface in pairs (game.surfaces, migration_table) do
+for _, surface in pairs(game.surfaces) do
 	local valves = surface.find_entities_filtered{name = migration_table}
 	for _, valve in pairs (valves) do
 		

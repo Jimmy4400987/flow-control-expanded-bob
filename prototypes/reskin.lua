@@ -7,8 +7,10 @@
 ---- data.lua ----
 ------------------
 
+local util = require("util")
+
 -- If reskins is present and doing reskin work, reskin stuff
-if (mods["reskins-bobs"] and (reskins.bobs and reskins.bobs.triggers.logistics.entities)) then -- Bob Pipes
+if mods["reskins-bobs"] and reskins and reskins.bobs and reskins.bobs.triggers and reskins.bobs.triggers.logistics and reskins.bobs.triggers.logistics.entities then -- Bob Pipes
 	
 	-- Set tier mapping
 	local material_map =
@@ -84,8 +86,7 @@ if (mods["reskins-bobs"] and (reskins.bobs and reskins.bobs.triggers.logistics.e
 		["flowbob-topup-valve-2"] = util.color("fcfcfc"),
 	}
 
-	
-
+	local function cardinal_pictures(x, tint)
 		return
 		{
 			layers =
@@ -93,21 +94,20 @@ if (mods["reskins-bobs"] and (reskins.bobs and reskins.bobs.triggers.logistics.e
 				-- Base
 				{
 					filename = reskins.bobs.directory.."/graphics/entity/logistics/valve/valve-base.png",
-					priority = "extra-high",
-					
 					width = 128,
 					height = 128,
+					priority = "high",
+					tint = tint,
 					scale = 0.5,
 				},
 				-- Mask
 				{
 					filename = reskins.bobs.directory.."/graphics/entity/logistics/valve/valve-mask.png",
-					priority = "extra-high",
-					
 					width = 128,
 					height = 128,
+					priority = "high",
 					tint = tint,
-					scale = 0.5
+					scale = 0.5,
 				}
 			}
 		}
