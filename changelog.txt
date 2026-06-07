@@ -1,5 +1,5 @@
 ---------------------------------------------------------------------------------------------------
-Version 1.1.43
+Version 2.0.0
 Date: 7.06. 2026
   Info:
     - Fixed reskin to new code of version of 2.0 (revisions needed)
