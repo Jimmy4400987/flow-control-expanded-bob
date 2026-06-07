@@ -84,9 +84,7 @@ if (mods["reskins-bobs"] and (reskins.bobs and reskins.bobs.triggers.logistics.e
 		["flowbob-topup-valve-2"] = util.color("fcfcfc"),
 	}
 
-	local function cardinal_pictures(x, tint)
-		local x_lr = 64*x
-		local x_hr = 128*x
+	
 
 		return
 		{
