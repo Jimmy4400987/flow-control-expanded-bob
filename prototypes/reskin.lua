@@ -96,37 +96,20 @@ if (mods["reskins-bobs"] and (reskins.bobs and reskins.bobs.triggers.logistics.e
 				{
 					filename = reskins.bobs.directory.."/graphics/entity/logistics/valve/valve-base.png",
 					priority = "extra-high",
-					x = x_lr,
-					width = 64,
-					height = 64,
-					hr_version =
-					{
-						filename = reskins.bobs.directory.."/graphics/entity/logistics/valve/hr-valve-base.png",
-						priority = "extra-high",
-						x = x_hr,
-						width = 128,
-						height = 128,
-						scale = 0.5
-					}
+					
+					width = 128,
+					height = 128,
+					scale = 0.5,
 				},
 				-- Mask
 				{
 					filename = reskins.bobs.directory.."/graphics/entity/logistics/valve/valve-mask.png",
 					priority = "extra-high",
-					x = x_lr,
-					width = 64,
-					height = 64,
+					
+					width = 128,
+					height = 128,
 					tint = tint,
-					hr_version =
-					{
-						filename = reskins.bobs.directory.."/graphics/entity/logistics/valve/hr-valve-mask.png",
-						priority = "extra-high",
-						x = x_hr,
-						width = 128,
-						height = 128,
-						tint = tint,
-						scale = 0.5
-					}
+					scale = 0.5
 				}
 			}
 		}
