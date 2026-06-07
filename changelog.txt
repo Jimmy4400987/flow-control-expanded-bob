@@ -1,9 +1,9 @@
 ---------------------------------------------------------------------------------------------------
-Version 2.0.0
+Version: 2.0.0
 Date: 7.06. 2026
   Info:
     - Fixed reskin to new code of version of 2.0 (revisions needed)
-  Fixes:
+  Bugfixes:
     - removed all of the hr_code in the mod
 ---------------------------------------------------------------------------------------------------
 Version: 1.1.42
