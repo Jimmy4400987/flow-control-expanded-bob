@@ -86,7 +86,7 @@ if (mods["reskins-bobs"] and (reskins.bobs and reskins.bobs.triggers.logistics.e
 		["flowbob-topup-valve-2"] = util.color("fcfcfc"),
 	}
 
-	local function cardinal_pictures(x, tint)
+	local function cardinal_pictures(tint)
 		return
 		{
 			layers =
@@ -127,10 +127,10 @@ if (mods["reskins-bobs"] and (reskins.bobs and reskins.bobs.triggers.logistics.e
 		reskins.lib.setup_standard_entity(name, 0, inputs)
 
 		-- Reskin entities
-		entity.pictures.picture.north = cardinal_pictures(0, inputs.tint)
-		entity.pictures.picture.east = cardinal_pictures(1, inputs.tint)
-		entity.pictures.picture.south = cardinal_pictures(2, inputs.tint)
-		entity.pictures.picture.west = cardinal_pictures(3, inputs.tint)
+		entity.pictures.picture.north = cardinal_pictures(inputs.tint)
+		entity.pictures.picture.east = cardinal_pictures(inputs.tint)
+		entity.pictures.picture.south = cardinal_pictures(inputs.tint)
+		entity.pictures.picture.west = cardinal_pictures(inputs.tint)
 		entity.pictures.picture.sheet = nil
 
 		-- Label to skip to next iteration
@@ -261,10 +261,8 @@ if (mods["reskins-angels"] and (reskins.angels and reskins.angels.triggers.petro
 	
 	local path = "__flow-control-expanded-bob__/graphics/entity/valve/angels"
 	
-	local function cardinal_pictures(x, tint)
-		local x_lr = 64*x
-		local x_hr = 128*x
-	
+	local function cardinal_pictures(tint)
+		
 		return
 		{
 			layers =
@@ -273,37 +271,21 @@ if (mods["reskins-angels"] and (reskins.angels and reskins.angels.triggers.petro
 				{
 					filename = path.."/valve-base.png",
 					priority = "extra-high",
-					x = x_lr,
-					width = 64,
-					height = 64,
-					hr_version =
-					{
-						filename = path.."/hr-valve-base.png",
-						priority = "extra-high",
-						x = x_hr,
-						width = 128,
-						height = 128,
-						scale = 0.5
-					}
+					
+					width = 128,
+					height = 128,
+					scale = 0.5,
+					tint = tint,
 				},
 				-- Mask
 				{
 					filename = path.."/valve-mask.png",
 					priority = "extra-high",
-					x = x_lr,
-					width = 64,
-					height = 64,
+					
+					width = 128,
+					height = 128,
 					tint = tint,
-					hr_version =
-					{
-						filename = path.."/hr-valve-mask.png",
-						priority = "extra-high",
-						x = x_hr,
-						width = 128,
-						height = 128,
-						tint = tint,
-						scale = 0.5
-					}
+					scale = 0.5,
 				}
 			}
 		}
@@ -322,10 +304,10 @@ if (mods["reskins-angels"] and (reskins.angels and reskins.angels.triggers.petro
 		reskins.lib.setup_standard_entity(name, 0, inputs)
 	
 		-- Reskin entities
-		entity.pictures.picture.north = cardinal_pictures(0, inputs.tint)
-		entity.pictures.picture.east = cardinal_pictures(1, inputs.tint)
-		entity.pictures.picture.south = cardinal_pictures(2, inputs.tint)
-		entity.pictures.picture.west = cardinal_pictures(3, inputs.tint)
+		entity.pictures.picture.north = cardinal_pictures(inputs.tint)
+		entity.pictures.picture.east = cardinal_pictures(inputs.tint)
+		entity.pictures.picture.south = cardinal_pictures(inputs.tint)
+		entity.pictures.picture.west = cardinal_pictures(inputs.tint)
 		entity.pictures.picture.sheet = nil
 	
 		-- Add pipe overs

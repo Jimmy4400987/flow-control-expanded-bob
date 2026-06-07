@@ -19,16 +19,17 @@ for _, surface in pairs(game.surfaces) do
 	for _, valve in pairs (valves) do
 		
 		-- Store entity properties
-		local name = valve.name
+		local old_name = valve.name
+		local new_name = migration_table[old_name]
 		local position = valve.position
 		local force = valve.force
-		if not name then return else end
+		if not new_name then return end
 
 		-- Migrate entity and fix position
 		valve.destroy()
 		surface.create_entity
 		{
-			name = name,
+			name = new_name,
 			position = position,
 			reverse = true,
 			force = force,
