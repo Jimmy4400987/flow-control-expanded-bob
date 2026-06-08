@@ -47,8 +47,11 @@ end
 function functions.get_pipe_pictures(material)
 	if mods["reskins-bobs"] then
 		return reskins.lib.pipe_pictures({mod = "bobs", group = "logistics", material = material})
-	else
-		return bob_pipepictures(material)
+	end
+
+	local pipe_pictures_fn = rawget(_G, "bob_pipepictures") or rawget(_G, "pipe_pictures")
+	if pipe_pictures_fn then
+		return pipe_pictures_fn(material)
 	end
 end
 
@@ -56,8 +59,11 @@ end
 function functions.get_pipe_covers(material)
 	if mods["reskins-bobs"] then
 		return reskins.lib.pipe_covers({mod = "bobs", group = "logistics", material = material})
-	else
-		return bob_pipecoverspictures(material)
+	end
+
+	local pipe_covers_fn = rawget(_G, "bob_pipecoverspictures") or rawget(_G, "pipecoverspictures")
+	if pipe_covers_fn then
+		return pipe_covers_fn(material)
 	end
 end
 

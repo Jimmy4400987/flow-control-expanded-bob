@@ -3,8 +3,14 @@
 ------------------------------
 
 -- Fetch functions from library
-local add_tech_recipe_unlock = bobmods.lib.tech.add_recipe_unlock
-local remove_tech_recipe_unlock = bobmods.lib.tech.remove_recipe_unlock
+-- Safely fetch functions from library (bobmods may not be present)
+-- Provide noop fallbacks that accept (tech, recipe) to match bobmods.lib.tech API
+local add_tech_recipe_unlock = function(tech, recipe) end
+local remove_tech_recipe_unlock = function(tech, recipe) end
+if bobmods and bobmods.lib and bobmods.lib.tech then
+	add_tech_recipe_unlock = bobmods.lib.tech.add_recipe_unlock
+	remove_tech_recipe_unlock = bobmods.lib.tech.remove_recipe_unlock
+end
 
 -- Adjusts valve unlocking for petrochem
 if mods ["angelspetrochem"] then
