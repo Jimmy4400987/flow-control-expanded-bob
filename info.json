@@ -1,16 +1,16 @@
 {
-	"name": "flow-control-expanded-bob",
-	"version": "2.0.1",
-	"title": "Flow Control for Bob's Logistics",
-	"author": "OldSkoolMatt, Kirazy, Jimmy440098(sub author)",
-	"factorio_version": "2.0",
-	"dependencies":
-	[
-		"base >= 2.0.0",
-		"Flow Control >= 3.2.0",
-		"boblogistics >= 2.1.0",
-		
-		"! bobsflowcontrol-updated"
-	],
-	"description": "Extends Flow Control to Bob's Logistics. Supports Artisanal Reskins and adds a new crafting tab dedicated to fluid network."
+  "name": "flow-control-expanded-bob",
+  "version": "2.1.2",
+  "title": "Flow Control for Bob's Logistics",
+  "author": "OldSkoolMatt, Kirazy, Jimmy440098(sub author)",
+  "factorio_version": "2.1",
+  "dependencies": [
+    "base >= 2.1.0",
+    "? space-age >= 2.1.0",
+    "? recycler >= 2.1.0",
+    "Flow Control >= 3.2.0",
+    "boblogistics >= 2.1.0",
+    "! bobsflowcontrol-updated"
+  ],
+  "description": "Extends Flow Control to Bob's Logistics. Supports Artisanal Reskins and adds a new crafting tab dedicated to fluid network."
 }

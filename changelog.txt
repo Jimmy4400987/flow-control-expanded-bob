@@ -1,4 +1,31 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.1.2
+Date: 19.10.2026
+  Bugfixes:
+    - Redirect recycling recipe outputs when replacing legacy valves
+    - Load after Space Age's recycler prototypes when available
+---------------------------------------------------------------------------------------------------
+Version: 2.1.1
+Date: 19.10.2026
+  Features:
+    - Add Space Age freezing support to Flow Control pipes and valves
+  Info:
+    - Declare Space Age as an optional dependency for correct prototype load order
+---------------------------------------------------------------------------------------------------
+Version: 2.1.0
+Date: 19.10.2026
+  Info:
+    - Updated compatibility to Factorio 2.1
+  Bugfixes:
+    - Delay legacy valve replacement until final prototype fixes
+    - Preserve Flow Control's setting type during migration
+---------------------------------------------------------------------------------------------------
+Version: 2.0.2
+Date: 19.10.2026
+  Bugfixes:
+    - Updated valve and recipe prototypes for Factorio 2.0
+    - Fixed missing valve sprite and icon references
+---------------------------------------------------------------------------------------------------
 Version: 2.0.0
 Date: 7.06. 2026
   Info:

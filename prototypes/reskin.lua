@@ -68,7 +68,7 @@ end
 if (mods["reskins-bobs"] and (reskins.bobs and reskins.bobs.triggers.logistics.entities)) then -- Bob Valves
 	local inputs =
 	{
-		type = "storage-tank",
+		type = "valve",
 		icon_name = "valve",
 		base_entity = "pipe",
 		mod = "bobs",
@@ -99,6 +99,7 @@ if (mods["reskins-bobs"] and (reskins.bobs and reskins.bobs.triggers.logistics.e
 					priority = "high",
 					tint = tint,
 					scale = 0.5,
+					frame_count = 1,
 				},
 				-- Mask
 				{
@@ -108,6 +109,7 @@ if (mods["reskins-bobs"] and (reskins.bobs and reskins.bobs.triggers.logistics.e
 					priority = "high",
 					tint = tint,
 					scale = 0.5,
+					frame_count = 1,
 				}
 			}
 		}
@@ -116,7 +118,7 @@ if (mods["reskins-bobs"] and (reskins.bobs and reskins.bobs.triggers.logistics.e
 	-- Reskin entities, create and assign extra details
 	for name, tint in pairs(tint_map) do
 		-- Fetch entity
-		local entity = data.raw[inputs.type][name]
+		local entity = data.raw.valve and data.raw.valve[name]
 
 		-- Check if entity exists, if not, skip this iteration
 		if not entity then goto continue end
@@ -127,11 +129,13 @@ if (mods["reskins-bobs"] and (reskins.bobs and reskins.bobs.triggers.logistics.e
 		reskins.lib.setup_standard_entity(name, 0, inputs)
 
 		-- Reskin entities
-		entity.pictures.picture.north = cardinal_pictures(inputs.tint)
-		entity.pictures.picture.east = cardinal_pictures(inputs.tint)
-		entity.pictures.picture.south = cardinal_pictures(inputs.tint)
-		entity.pictures.picture.west = cardinal_pictures(inputs.tint)
-		entity.pictures.picture.sheet = nil
+		entity.animations =
+		{
+			north = cardinal_pictures(inputs.tint),
+			east = cardinal_pictures(inputs.tint),
+			south = cardinal_pictures(inputs.tint),
+			west = cardinal_pictures(inputs.tint)
+		}
 
 		-- Label to skip to next iteration
 		::continue::
@@ -276,6 +280,7 @@ if (mods["reskins-angels"] and (reskins.angels and reskins.angels.triggers.petro
 					height = 128,
 					scale = 0.5,
 					tint = tint,
+					frame_count = 1,
 				},
 				-- Mask
 				{
@@ -294,6 +299,12 @@ if (mods["reskins-angels"] and (reskins.angels and reskins.angels.triggers.petro
 	for name, map in pairs(valves) do
 		-- Fetch entity
 		local entity = data.raw[inputs.type][name]
+		if data.raw.valve and data.raw.valve[name] then
+			entity = data.raw.valve[name]
+			inputs.type = "valve"
+		else
+			inputs.type = "storage-tank"
+		end
 	
 		-- Check if entity exists, if not, skip this iteration
 		if not entity then goto continue end
@@ -304,11 +315,21 @@ if (mods["reskins-angels"] and (reskins.angels and reskins.angels.triggers.petro
 		reskins.lib.setup_standard_entity(name, 0, inputs)
 	
 		-- Reskin entities
-		entity.pictures.picture.north = cardinal_pictures(inputs.tint)
-		entity.pictures.picture.east = cardinal_pictures(inputs.tint)
-		entity.pictures.picture.south = cardinal_pictures(inputs.tint)
-		entity.pictures.picture.west = cardinal_pictures(inputs.tint)
-		entity.pictures.picture.sheet = nil
+		if inputs.type == "valve" then
+			entity.animations =
+			{
+				north = cardinal_pictures(inputs.tint),
+				east = cardinal_pictures(inputs.tint),
+				south = cardinal_pictures(inputs.tint),
+				west = cardinal_pictures(inputs.tint)
+			}
+		else
+			entity.pictures.picture.north = cardinal_pictures(inputs.tint)
+			entity.pictures.picture.east = cardinal_pictures(inputs.tint)
+			entity.pictures.picture.south = cardinal_pictures(inputs.tint)
+			entity.pictures.picture.west = cardinal_pictures(inputs.tint)
+			entity.pictures.picture.sheet = nil
+		end
 	
 		-- Add pipe overs
 		entity.fluid_box.pipe_covers = pipecoverspictures()

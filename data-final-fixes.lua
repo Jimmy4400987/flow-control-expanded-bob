@@ -10,8 +10,37 @@
 -- Load the: SUPER-DUPER-VALVE-NUKER (once again just to make sure they got NUKED!)
 require("utils.super-duper-valve-nuker")
 
+-- Add Space Age freezing support to the pipe and valve prototypes from this mod.
+require("prototypes.space-age")
+
 -- Apply final fixes
 require("prototypes.overrides")
+
+-- Bob's Logistics links the vanilla pump to bob-pump-2 as an upgrade. Some
+-- 2.1 mod combinations change the vanilla pump's fast-replaceable group after
+-- Bob creates its pump prototypes, which makes Factorio reject that upgrade
+-- chain. Keep the Bob pumps in the same group as the vanilla pump.
+if mods["boblogistics"] and data.raw.pump and data.raw.pump.pump then
+	local pump_group = data.raw.pump.pump.fast_replaceable_group
+	for _, name in ipairs({ "bob-pump-2", "bob-pump-3", "bob-pump-4" }) do
+		local pump = data.raw.pump[name]
+		if pump then
+			pump.fast_replaceable_group = pump_group
+		end
+	end
+end
+
+-- Bob's Space Age integration moves the turbo-belt unlock to logistics-4.
+-- With some overhaul mods, that replacement leaves logistics-4 depending on
+-- itself, which makes Factorio report a technology cycle.
+local logistics_4 = data.raw.technology and data.raw.technology["logistics-4"]
+if logistics_4 and logistics_4.prerequisites then
+	for i = #logistics_4.prerequisites, 1, -1 do
+		if logistics_4.prerequisites[i] == "logistics-4" then
+			table.remove(logistics_4.prerequisites, i)
+		end
+	end
+end
 
 -- Fetch functions from library
 local make_subgroup = require("utils.lib").make_subgroup

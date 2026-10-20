@@ -79,7 +79,8 @@ for material, parameters in pairs(materials) do
 		item.icon_mipmaps = nil
 
 		-- Set recipe properties
-		recipe.ingredients = {{material.."-pipe", 1}}
+		recipe.ingredients = {{type = "item", name = material.."-pipe", amount = 1}}
+		recipe.results = {{type = "item", name = "pipe-"..material.."-"..pipe, amount = 1}}
 		recipe.enabled = parameters.enabled or false
 
 		-- Generate pipe_pictures table

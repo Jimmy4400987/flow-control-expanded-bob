@@ -83,7 +83,7 @@ function functions.create_extensible_prototype_definitions(pipe_type, material)
 		recipe = util.merge{data.raw.recipe["pipe-"..pipe_type],
 		{
 			name = flow_pipe_name,
-			result = flow_pipe_name
+			results = {{type = "item", name = flow_pipe_name, amount = 1}}
 		}
 	},
 
@@ -152,15 +152,58 @@ function functions.replace_recipe_ingredient_ALL(old_item, new_item)
     end
 end
 
+-- Replace outputs too, so generated recycling recipes do not return removed items.
+function functions.replace_recipe_result_ALL(old_item, new_item)
+	local function update_results(results)
+		if not results then return end
+		for _, result in pairs(results) do
+			if type(result) == "table" then
+				if result.name == old_item then
+					result.name = new_item
+				elseif result[1] == old_item then
+					result[1] = new_item
+				end
+			end
+		end
+	end
+
+	local function update_recipe(recipe)
+		if recipe.result == old_item then
+			recipe.result = new_item
+		end
+		update_results(recipe.results)
+
+		for _, difficulty in pairs({"normal", "expensive"}) do
+			local variant = recipe[difficulty]
+			if variant then
+				if variant.result == old_item then
+					variant.result = new_item
+				end
+				update_results(variant.results)
+			end
+		end
+	end
+
+	for _, recipe in pairs(data.raw.recipe) do
+		update_recipe(recipe)
+	end
+end
+
 -- Nukes entities from the game
 function functions.nuke_entity(old, new, entity_type)
 	functions.remove_recipe_unlock_ALL(old)
 	functions.replace_recipe_ingredient_ALL(old, new)
+	functions.replace_recipe_result_ALL(old, new)
 
 	-- Nukes the entity
 	data.raw.recipe[old] = nil
 	data.raw.item[old] = nil
-	data.raw[entity_type][old] = nil
+	if data.raw[entity_type] then
+		data.raw[entity_type][old] = nil
+	end
+	if data.raw.valve then
+		data.raw.valve[old] = nil
+	end
 end
 
 return functions
