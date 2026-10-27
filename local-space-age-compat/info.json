@@ -1,0 +1,18 @@
+{
+  "name": "local-space-age-compat",
+  "version": "1.0.0",
+  "title": "Local Space Age Compatibility",
+  "author": "Local",
+  "factorio_version": "2.1",
+  "dependencies": [
+    "base >= 2.1.0",
+    "? space-age",
+    "? PlanetsLib",
+    "? 5dim_equipment",
+    "? 5dim_space_age",
+    "? 5dim_vehicles",
+    "? Power-Armour-Replacer",
+    "? PARs-SpaceAge-Extension"
+  ],
+  "description": "Keeps 5dim research progression reachable when Power Armour Replacer hides the vanilla prerequisite technologies."
+}
