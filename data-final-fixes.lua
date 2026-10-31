@@ -120,7 +120,7 @@ if mods["boblogistics"] then
 	end
 
 	-- Flow Control moves these Bob/vanilla items into its own group; restore the
-	-- normal Factorio pipe subgroup and remove the now-unused Flow Control group.
+	-- normal Factorio pipe subgroup.
 	for _, name in ipairs({ "pipe", "pipe-to-ground", "pump" }) do
 		local item = data.raw.item[name]
 		if item then
@@ -128,7 +128,18 @@ if mods["boblogistics"] then
 		end
 	end
 	if data.raw["item-subgroup"] then
-		data.raw["item-subgroup"]["pipe-distribution"] = nil
+		-- Some mods still assign recipes here whenever Flow Control is enabled.
+		-- Keep the subgroup as a harmless compatibility target after removing its pipes.
+		if not data.raw["item-subgroup"]["pipe-distribution"] then
+			data:extend({
+				{
+					type = "item-subgroup",
+					name = "pipe-distribution",
+					group = "logistics",
+					order = "da",
+				}
+			})
+		end
 	end
 	if data.raw["item-group"] then
 		data.raw["item-group"]["fluid-network"] = nil
