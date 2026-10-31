@@ -2,6 +2,12 @@
 ---- data.lua ----
 ------------------
 
+-- Bob's Logistics is the selected pipe system. Do not load Flow Control's
+-- competing pipe shapes or valves when Bob's Logistics is active.
+if mods["boblogistics"] then
+	return
+end
+
 -- Load prototypes
 require("prototypes.flowbob-pipes")
 require("prototypes.flowbob-valves")

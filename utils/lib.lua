@@ -45,7 +45,8 @@ end
 
 -- Returns the full pipe_pictures definition for a given material, sourced from the appropriate mod
 function functions.get_pipe_pictures(material)
-	if mods["reskins-bobs"] then
+	local reskins = rawget(_G, "reskins")
+	if mods["reskins-bobs"] and reskins and reskins.lib and reskins.lib.pipe_pictures then
 		return reskins.lib.pipe_pictures({mod = "bobs", group = "logistics", material = material})
 	end
 
@@ -57,7 +58,8 @@ end
 
 -- Returns the full pipe_covers definition for a given material, sourced from the appropriate mod
 function functions.get_pipe_covers(material)
-	if mods["reskins-bobs"] then
+	local reskins = rawget(_G, "reskins")
+	if mods["reskins-bobs"] and reskins and reskins.lib and reskins.lib.pipe_covers then
 		return reskins.lib.pipe_covers({mod = "bobs", group = "logistics", material = material})
 	end
 

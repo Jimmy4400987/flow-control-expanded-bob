@@ -7,15 +7,6 @@
 ---- data-final-fixes.lua ----
 ------------------------------
 
--- Load the: SUPER-DUPER-VALVE-NUKER (once again just to make sure they got NUKED!)
-require("utils.super-duper-valve-nuker")
-
--- Add Space Age freezing support to the pipe and valve prototypes from this mod.
-require("prototypes.space-age")
-
--- Apply final fixes
-require("prototypes.overrides")
-
 -- Bob's Logistics links the vanilla pump to bob-pump-2 as an upgrade. Some
 -- 2.1 mod combinations change the vanilla pump's fast-replaceable group after
 -- Bob creates its pump prototypes, which makes Factorio reject that upgrade
@@ -41,6 +32,119 @@ if logistics_4 and logistics_4.prerequisites then
 		end
 	end
 end
+
+-- When Bob's Logistics is active, keep its pipe set and remove Flow Control's
+-- competing prototypes after other mods have finished their compatibility edits.
+if mods["boblogistics"] then
+	local removed_items = {}
+	local removed_recipes = {}
+
+	local function remove_flow_control_prototype(name)
+		removed_items[name] = true
+		removed_recipes[name] = true
+		data.raw.recipe[name] = nil
+		data.raw.item[name] = nil
+		if data.raw["storage-tank"] then
+			data.raw["storage-tank"][name] = nil
+		end
+		if data.raw.valve then
+			data.raw.valve[name] = nil
+		end
+	end
+
+	local shapes = { "straight", "junction", "elbow" }
+	for _, shape in ipairs(shapes) do
+		remove_flow_control_prototype("pipe-" .. shape)
+	end
+
+	for _, material in ipairs({
+		"brass", "bronze", "copper", "ceramic", "stone", "plastic",
+		"steel", "titanium", "tungsten", "copper-tungsten", "nitinol",
+	}) do
+		for _, shape in ipairs(shapes) do
+			remove_flow_control_prototype("pipe-" .. material .. "-" .. shape)
+		end
+	end
+
+	for _, name in ipairs({
+		"flowbob-check-valve",
+		"flowbob-overflow-valve",
+		"flowbob-topup-valve-1",
+		"flowbob-topup-valve-2",
+	}) do
+		remove_flow_control_prototype(name)
+	end
+
+	local function list_references_removed_item(list)
+		for _, entry in pairs(list or {}) do
+			local name = type(entry) == "table" and (entry.name or entry[1]) or entry
+			if name and removed_items[name] then
+				return true
+			end
+		end
+		return false
+	end
+
+	local function recipe_references_removed_item(recipe)
+		if recipe.result and removed_items[recipe.result] then
+			return true
+		end
+		if list_references_removed_item(recipe.ingredients) or list_references_removed_item(recipe.results) then
+			return true
+		end
+		for _, difficulty in ipairs({ "normal", "expensive" }) do
+			local variant = recipe[difficulty]
+			if variant and ((variant.result and removed_items[variant.result])
+				or list_references_removed_item(variant.ingredients)
+				or list_references_removed_item(variant.results)) then
+				return true
+			end
+		end
+		return false
+	end
+
+	for name, recipe in pairs(data.raw.recipe) do
+		if recipe_references_removed_item(recipe) then
+			removed_recipes[name] = true
+			data.raw.recipe[name] = nil
+		end
+	end
+
+	for _, technology in pairs(data.raw.technology) do
+		for i = #(technology.effects or {}), 1, -1 do
+			local effect = technology.effects[i]
+			if effect.type == "unlock-recipe" and removed_recipes[effect.recipe] then
+				table.remove(technology.effects, i)
+			end
+		end
+	end
+
+	-- Flow Control moves these Bob/vanilla items into its own group; restore the
+	-- normal Factorio pipe subgroup and remove the now-unused Flow Control group.
+	for _, name in ipairs({ "pipe", "pipe-to-ground", "pump" }) do
+		local item = data.raw.item[name]
+		if item then
+			item.subgroup = "energy-pipe-distribution"
+		end
+	end
+	if data.raw["item-subgroup"] then
+		data.raw["item-subgroup"]["pipe-distribution"] = nil
+	end
+	if data.raw["item-group"] then
+		data.raw["item-group"]["fluid-network"] = nil
+	end
+
+	return
+end
+
+-- Load the: SUPER-DUPER-VALVE-NUKER (once again just to make sure they got NUKED!)
+require("utils.super-duper-valve-nuker")
+
+-- Add Space Age freezing support to the pipe and valve prototypes from this mod.
+require("prototypes.space-age")
+
+-- Apply final fixes
+require("prototypes.overrides")
 
 -- Fetch functions from library
 local make_subgroup = require("utils.lib").make_subgroup

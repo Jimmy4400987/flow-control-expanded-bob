@@ -8,9 +8,46 @@
 ------------------
 
 local util = require("util")
+-- Reskins is optional and initializes its API in its own data stage. The optional
+-- dependencies in info.json normally order it first; retain these guards so a
+-- partial or disabled Reskins API cleanly falls back to the base/Bob graphics.
+local reskins = rawget(_G, "reskins")
+
+local function get_reskins_setting(name)
+	if reskins and reskins.lib then
+		local settings_api = reskins.lib.settings
+		if settings_api and type(settings_api.get_value) == "function" then
+			return settings_api.get_value(name)
+		end
+		if type(reskins.lib.setting) == "function" then
+			return reskins.lib.setting(name)
+		end
+	end
+
+	local setting = settings.startup and settings.startup[name]
+	return setting and setting.value
+end
+
+local function assign_reskins_icon(name, tier, inputs)
+	if reskins and reskins.lib and type(reskins.lib.construct_icon) == "function" then
+		-- Reskins Library 2.4+ replaced append_tier_labels/assign_icons with
+		-- construct_icon and the icon_filename input.
+		inputs.icon_filename = inputs.icon
+		inputs.icon = nil
+		inputs.make_icon_pictures = nil
+		return reskins.lib.construct_icon(name, tier, inputs)
+	end
+
+	if reskins and reskins.lib
+		and type(reskins.lib.append_tier_labels) == "function"
+		and type(reskins.lib.assign_icons) == "function" then
+		reskins.lib.append_tier_labels(tier, inputs)
+		return reskins.lib.assign_icons(name, inputs)
+	end
+end
 
 -- If reskins is present and doing reskin work, reskin stuff
-if mods["reskins-bobs"] and reskins and reskins.bobs and reskins.bobs.triggers and reskins.bobs.triggers.logistics and reskins.bobs.triggers.logistics.entities then -- Bob Pipes
+if mods["reskins-bobs"] and reskins and reskins.lib and reskins.bobs and reskins.bobs.triggers and reskins.bobs.triggers.logistics and reskins.bobs.triggers.logistics.entities then -- Bob Pipes
 	
 	-- Set tier mapping
 	local material_map =
@@ -44,7 +81,7 @@ if mods["reskins-bobs"] and reskins and reskins.bobs and reskins.bobs.triggers a
 			icon = "__flow-control-expanded-bob__/graphics/icon/reskin/pipe-"..material.."-"..variant..".png",
 			icon_size = 64,
 			make_icon_pictures = true,
-			tier_labels = reskins.lib.setting("reskins-bobs-do-pipe-tier-labeling"),
+			tier_labels = get_reskins_setting("reskins-bobs-do-pipe-tier-labeling"),
 			type = "storage-tank",
 		}
 	end
@@ -55,22 +92,23 @@ if mods["reskins-bobs"] and reskins and reskins.bobs and reskins.bobs.triggers a
 			-- Setup inputs
 			local icon_inputs = set_icon_inputs(material, pipe)
 
-			-- Append tier labels (the function will do nothing if tier_labels is false)
-			reskins.lib.append_tier_labels(tier, icon_inputs)
-
 			-- Assign tiering and icons to targeted pipes
 			local name = (material == "iron") and "pipe-"..pipe or "pipe-"..material.."-"..pipe
-			reskins.lib.assign_icons(name, icon_inputs)
+			assign_reskins_icon(name, tier, icon_inputs)
 		end
 	end
 end
 
-if (mods["reskins-bobs"] and (reskins.bobs and reskins.bobs.triggers.logistics.entities)) then -- Bob Valves
+if mods["reskins-bobs"] and reskins and reskins.lib
+	and type(reskins.lib.setup_standard_entity) == "function"
+	and reskins.bobs and reskins.bobs.directory and reskins.bobs.triggers
+	and reskins.bobs.triggers.logistics and reskins.bobs.triggers.logistics.entities then -- Bob Valves
 	local inputs =
 	{
 		type = "valve",
 		icon_name = "valve",
-		base_entity = "pipe",
+		base_entity = "pipe", -- Legacy Reskins Library field
+		base_entity_name = "pipe", -- Reskins Library 2.4+ field
 		mod = "bobs",
 		group = "logistics",
 		particles = {["small"] = 2},
@@ -142,7 +180,11 @@ if (mods["reskins-bobs"] and (reskins.bobs and reskins.bobs.triggers.logistics.e
 	end
 end
 
-if (mods["reskins-angels"] and (reskins.angels and reskins.angels.triggers.smelting.entities)) then -- Angels Pipes
+if mods["reskins-angels"] and reskins and reskins.lib
+	and type(reskins.lib.pipe_pictures) == "function"
+	and type(reskins.lib.pipe_covers) == "function"
+	and reskins.angels and reskins.angels.triggers
+	and reskins.angels.triggers.smelting and reskins.angels.triggers.smelting.entities then -- Angels Pipes
 	
 	-- Set tier mapping
 	local material_map =
@@ -168,7 +210,7 @@ if (mods["reskins-angels"] and (reskins.angels and reskins.angels.triggers.smelt
 		icon = "__flow-control-expanded-bob__/graphics/icon/reskin/angels/pipe-"..material.."-"..variant..".png",
 		icon_size = 64,
 		make_icon_pictures = true,
-		tier_labels = reskins.lib.setting("reskins-bobs-do-pipe-tier-labeling"),
+		tier_labels = get_reskins_setting("reskins-bobs-do-pipe-tier-labeling"),
 		type = "storage-tank",
 	}
 end
@@ -179,12 +221,9 @@ end
 		-- Setup inputs
 		local icon_inputs = set_icon_inputs(material, pipe)
 
-		-- Append tier labels (the function will do nothing if tier_labels is false)
-		reskins.lib.append_tier_labels(tier, icon_inputs)
-
 		-- Assign tiering and icons to targeted pipes
 		local name = (material == "iron") and "pipe-"..pipe or "pipe-"..material.."-"..pipe
-		reskins.lib.assign_icons(name, icon_inputs)
+		assign_reskins_icon(name, tier, icon_inputs)
 	end
 end
 	
@@ -240,13 +279,17 @@ end
 	end
 end
 
-if (mods["reskins-angels"] and (reskins.angels and reskins.angels.triggers.petrochem.entities)) then -- Angels Valves
+if mods["reskins-angels"] and reskins and reskins.lib
+	and type(reskins.lib.setup_standard_entity) == "function"
+	and reskins.angels and reskins.angels.triggers
+	and reskins.angels.triggers.petrochem and reskins.angels.triggers.petrochem.entities then -- Angels Valves
 	-- Set input parameters
 	local inputs =
 	{
 		type = "storage-tank",
 		icon_name = "valve",
-		base_entity = "pipe",
+		base_entity = "pipe", -- Legacy Reskins Library field
+		base_entity_name = "pipe", -- Reskins Library 2.4+ field
 		mod = "angels",
 		group = "petrochem",
 		particles = {["small"] = 2},

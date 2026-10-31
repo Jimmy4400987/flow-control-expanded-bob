@@ -10,6 +10,13 @@
     "? recycler >= 2.1.0",
     "Flow Control >= 3.2.0",
     "boblogistics >= 2.1.0",
+    "? reskins-library",
+    "? reskins-bobs",
+    "? reskins-angels",
+    "? combat-mechanics-overhaul",
+    "? Krastorio2",
+    "? MoreTooltips",
+    "? phosphorus",
     "! bobsflowcontrol-updated"
   ],
   "description": "Extends Flow Control to Bob's Logistics. Supports Artisanal Reskins and adds a new crafting tab dedicated to fluid network."
