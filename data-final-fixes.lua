@@ -130,7 +130,10 @@ if mods["boblogistics"] then
 	if data.raw["item-subgroup"] then
 		-- Some mods still assign recipes here whenever Flow Control is enabled.
 		-- Keep the subgroup as a harmless compatibility target after removing its pipes.
-		if not data.raw["item-subgroup"]["pipe-distribution"] then
+		local pipe_subgroup = data.raw["item-subgroup"]["pipe-distribution"]
+		if pipe_subgroup then
+			pipe_subgroup.group = "logistics"
+		else
 			data:extend({
 				{
 					type = "item-subgroup",
